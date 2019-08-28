@@ -15,7 +15,7 @@ class tableRow extends React.Component {
     }
 
     render () {
-        const {name, fields } = this.props.row;
+        const {name, fields, id } = this.props.row;
         const { fills } = this.props;
         return (
         <TableRow>
@@ -28,7 +28,7 @@ class tableRow extends React.Component {
                 <IconButton 
                     aria-label="edit" 
                     disabled={!!fills.length}
-                    onClick={ () => this.props.changePage()}
+                    onClick={ () => this.props.changePage(id)}
                 >
                     <EditIcon color="secondary" />
                 </IconButton>
@@ -54,7 +54,7 @@ const mapStateToProps = ({fills: { fills }}, { row: {id}}) => {
     bindActionCreators(
       {  
           getFillsByForm,
-          changePage: () => push('/form/10')
+          changePage: (id) => push(`/form/${id}`)
     },
       dispatch
     )

@@ -8,7 +8,6 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import TablePagination from '@material-ui/core/TablePagination';
 import RowComponent from './tableRow';
-// import WithFillsRow from './tableRowWrapper'
 
 const useStyles = makeStyles(theme => ({
   root: {

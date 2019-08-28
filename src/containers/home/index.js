@@ -1,9 +1,11 @@
 import React from 'react'
-// import { push } from 'connected-react-router'
+import { push } from 'connected-react-router'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { getForms } from '../../modules/forms/thunks'
 import TabelForms from './tabelsForms'
+import Button from '@material-ui/core/Button';
+
 
 class Home extends React.Component {
   state = {
@@ -33,6 +35,9 @@ class Home extends React.Component {
 
     return (
       <div>
+        <Button variant="contained" color="primary" onClick={() => this.props.goToCreateFormPage()}>
+          Create Form
+        </Button>
         {forms.length ? (<TabelForms 
           rowsPerPage={this.state.rowsPerPage}
           page={this.state.page}
@@ -51,7 +56,9 @@ const mapStateToProps = ({forms}) => ({
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
-    {  getForms },
+    {  getForms,
+      goToCreateFormPage: () => push('/form/new') 
+    },
     dispatch
   )
 
