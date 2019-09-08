@@ -8,28 +8,30 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import TablePagination from '@material-ui/core/TablePagination';
 import RowComponent from './tableRow';
+import { withStyles } from '@material-ui/styles';
 
-const useStyles = makeStyles(theme => ({
+const styles = {
   root: {
     width: '100%',
-    marginTop: theme.spacing(3),
     overflowX: 'auto',
   },
   table: {
     minWidth: 650,
   },
-}));
+}
 
 
 
-export default function SimpleTable({ 
+
+function SimpleTable({ 
     data, 
     handleChangePage, 
     handleChangeRowsPerPage,
     page,
-    rowsPerPage 
+    rowsPerPage,
+    classes
 }) {
-  const classes = useStyles();
+
 
 
   return (
@@ -68,3 +70,5 @@ export default function SimpleTable({
     </Paper>
   );
 }
+
+export default withStyles(styles)(SimpleTable)

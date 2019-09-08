@@ -1,68 +1,109 @@
-import React from 'react';
-import List from '@material-ui/core/List';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import TextField from '@material-ui/core/TextField';
-import Checkbox from '@material-ui/core/Checkbox';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import { prop } from 'ramda';
+import React from 'react'
+import List from '@material-ui/core/List'
+import ListItem from '@material-ui/core/ListItem'
+import { connect } from 'react-redux'
+import { push } from 'connected-react-router'
+import { prop, update } from 'ramda'
+import Field from './field'
+import Button from '@material-ui/core/Button'
 
-const typeOptions = [
-    'dropdown',
-    'checkmark',
-    'text',
-    'number'
-]
-
+const typeOptions = ['dropdown', 'checkmark', 'text', 'number']
 
 class FormBuilder extends React.Component {
-    constructor(props) {
-        super(props)
-        const state = {
-            isCreate: true
+  constructor(props) {
+    super(props)
+    const { currentForm } = this.props
+    this.state = currentForm
+      ? {
+          isCreate: false,
+          form: currentForm
         }
-    }
-    componentDidMount() {
-       const { currentForm } = this.props
-       if (currentForm) {
-           this.setState({
-               ...this.state,
-               isCreate: false,
-               form: currentForm
-           })
-       } else {
-           this.setState({
-               ...this.state,
-               isCreate: true
-           })
-       }
-    }
+      : {
+          isCreate: true,
+          form: {
+            fields: []
+          }
+        }
+  }
+  // componentDidMount() {
+  //    const { currentForm } = this.props
+  //    if (currentForm) {
+  //        this.setState({
+  //            ...this.state,
+  //            isCreate: false,
+  //            form: currentForm
+  //        })
+  //    } else {
+  //        this.setState({
+  //            ...this.state,
+  //            isCreate: true
+  //        })
+  //    }
+  // }
+  fieldUpdate(index) {
+    return field =>
+      this.setState({
+        form: {
+          ...this.state.form,
+          fields: update(index, field, this.state.form.fields)
+        }
+      })
+  }
+  addField() {
+    this.setState({
+      form: {
+        ...this.state.form,
+        fields: [
+          ...this.state.form.fields,
+          { type: 'text', name: '', label: '', placeholder: '' }
+        ]
+      }
+    })
+  }
 
-    render() {
-        return (
-            <form>
-                {
-                    prop('form', this.state) 
-                    ? <List>
-                       { this.state.form.fields.map((input,index) => {
-                            return (
-                                <ListItem key={index}>
-                                    <Select value={input.type}>
-                                        {typeOptions.map( op => <MenuItem value={op} key={op}>{op}</MenuItem>)} 
-                                    </Select>
-                                    <TextField value={input.label} label="LABEL"></TextField>
-                                    <TextField value={input.name} label="NAME"></TextField>
-                                    <TextField value={input.placeholder} label="PLACEHOLDER"></TextField>
-                                </ListItem>
-                            )
-                        })}
-                    </List>
-                    : null
-                }
-            </form>
-        )
-    }
+  goToBack() {
+    push('/')
+  }
+
+  render() {
+    return (
+      <form>
+        {
+          <List>
+            {this.state.form.fields.map((input, index) => {
+              return (
+                <ListItem key={index}>
+                  <Field
+                    fieldData={input}
+                    fieldUpdate={this.fieldUpdate(index)}
+                  />
+                </ListItem>
+              )
+            })}
+          </List>
+        }
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => this.addField()}>
+          Add field
+        </Button>
+        <Button
+          variant="outlined"
+          color="primary"
+          onClick={() => this.props.goToBack()}>
+          Cancel
+        </Button>
+      </form>
+    )
+  }
 }
-export default FormBuilder
+
+const mapDispatchToProps = dispatch => ({
+  goToBack: () => dispatch(push('/'))
+})
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(FormBuilder)

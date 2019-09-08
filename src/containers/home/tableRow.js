@@ -8,7 +8,18 @@ import { getFillsByForm } from '../../modules/fills/thunks';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
+import { withStyles } from '@material-ui/styles';
+import { green, yellow } from '@material-ui/core/colors';
 
+
+const styles = {
+    editB: {
+      color: green[500]
+    },
+    viewB: {
+      color: yellow[700]
+    },
+  }
 class tableRow extends React.Component {
     componentDidMount() {
         this.props.getFillsByForm(this.props.row.id)
@@ -30,12 +41,12 @@ class tableRow extends React.Component {
                     disabled={!!fills.length}
                     onClick={ () => this.props.changePage(id)}
                 >
-                    <EditIcon color="secondary" />
+                    <EditIcon className={this.props.classes.editB} color="secondary" />
                 </IconButton>
             </TableCell>
             <TableCell align="center">
                 <IconButton aria-label="view">
-                    <ViewIcon color="primary"/>
+                    <ViewIcon className={this.props.classes.viewB} color="primary"/>
                 </IconButton>
             </TableCell>
         </TableRow>)
@@ -62,4 +73,4 @@ const mapStateToProps = ({fills: { fills }}, { row: {id}}) => {
   export default connect(
     mapStateToProps,
     mapDispatchToProps
-  )(tableRow)
+  )(withStyles(styles)(tableRow))
