@@ -16,10 +16,10 @@ const typeOptions = [
 ]
 
 const mapTypeFunctions = {
-    text: pipe(pick(['name', 'label', 'type']), assoc('placeholder', '')),
-    dropdown: pipe(pick(['name', 'label', 'type']), assoc('items', [{ name: '', value: ''}]),assoc('default', 0)),
-    checkmark: pipe(pick(['name', 'label', 'type'])),
-    number: pipe(pick(['name', 'label', 'type']), assoc('placeholder', '')),
+    text: pipe(pick(['type', 'name', 'label']), assoc('placeholder', '')),
+    dropdown: pipe(pick(['type', 'name', 'label']), assoc('items', [{ name: '', value: ''}]),assoc('default', 0)),
+    checkmark: pipe(pick(['type', 'name', 'label'])),
+    number: pipe(pick(['type', 'name', 'label']), assoc('placeholder', '')),
 }
 
 class Field extends React.Component {
@@ -27,53 +27,71 @@ class Field extends React.Component {
         super(props)
         const { fieldData } = this.props;
         this.state = {
-            ...fieldData
+            field: { ...fieldData }
         }
     }
 
     onChange(key) {
         return (e) => {
             this.setState({
-                [key]: e.target.value
-            }, () => this.props.fieldUpdate(this.state))
+                field: {
+                    ...this.state.field,
+                    [key]: e.target.value
+                }
+            }, () => this.props.fieldUpdate(this.state.field))
         }
 
     }
 
     onChangeType(e) {
-       this.setState(pipe(
-        mapTypeFunctions[e.target.value],
-        assoc('type', e.target.value)
-       ), () => this.props.fieldUpdate(this.state))
+       this.setState(state => {
+           const f = mapTypeFunctions[e.target.value]
+           const res = pipe(f, assoc('type', e.target.value))(state.field)
+           return {
+               field: res
+           }
+        }, () => {
+            this.props.fieldUpdate(this.state.field)
+        })
     }
+
     updateName(i) {
         return (e) => {
             this.setState({
-                items: assocPath([i, 'name'], e.target.value, this.state.items)
-            }, () => this.props.fieldUpdate(this.state))
+                field: {
+                    ...this.state.field,
+                    items: assocPath([i, 'name'], e.target.value, this.state.field.items)
+                }
+            }, () => this.props.fieldUpdate(this.state.field))
         }
     }
     updateValue(i) {
         return (e) => {
             this.setState({
-                items: assocPath([i, 'value'], e.target.value, this.state.items)
-            }, () => this.props.fieldUpdate(this.state))
+                field: {
+                    ...this.state.field,
+                    items: assocPath([i, 'value'], e.target.value, this.state.field.items)
+                }
+            }, () => this.props.fieldUpdate(this.state.field))
         }
     }
     addItem() {
         this.setState({
-            items: append({ name: '', value: ''}, this.state.items)
-        }, () => this.props.fieldUpdate(this.state))
+            items: append({ name: '', value: ''}, this.state.field.items)
+        }, () => this.props.fieldUpdate(this.state.field))
     }
     deleteItem(i) {
         this.setState({
-            items: remove(i, 1, this.state.items)
-        }, () => this.props.fieldUpdate(this.state))
+            field: {
+                ...this.state.field,
+                items: remove(i, 1, this.state.items)
+            }
+        }, () => this.props.fieldUpdate(this.state.field))
     }
     render() {
         return (
             <Grid container spacing={3}>
-                { Object.entries(omit(['items'], this.state)).map( ([key, val], index) => {
+                { Object.entries(omit(['items'], this.state.field)).map( ([key, val], index) => {
                     if (key === 'type') {
                         return (
                             <Grid item xs={3} key={`${key}-${index}`}>
@@ -103,9 +121,9 @@ class Field extends React.Component {
                         )
                     }
                 })}
-                {this.state.type === 'dropdown' ? 
+                {this.state.field.type === 'dropdown' ? 
                 <> {
-                    this.state.items.map(({ name, value}, idx) => {
+                    this.state.field.items.map(({ name, value}, idx) => {
                         return (
                             <div key={`${name}-${idx}`}>
                                 <TextField value={name} label="name" onChange={this.updateName(idx)}></TextField>

@@ -5,6 +5,13 @@ import { connect } from 'react-redux'
 import { getForms } from '../../modules/forms/thunks'
 import TabelForms from './tabelsForms'
 import Button from '@material-ui/core/Button'
+import { withStyles } from '@material-ui/styles';
+
+const styles ={
+  indent: {
+    margin: '10px 0'
+  }
+}
 
 class Home extends React.Component {
   state = {
@@ -66,4 +73,4 @@ const mapDispatchToProps = dispatch =>
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Home)
+)(withStyles(styles)(Home))

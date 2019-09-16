@@ -16,3 +16,8 @@ export const getFormById = (id) => async (dispatch) => {
     dispatch(actions.getFormById(null));
   }
 }
+
+export const updateForm = (id) => async () => {
+    const { data } = await axios.put(`${baseURL}/forms/${id}`);
+    return data
+}
