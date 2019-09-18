@@ -9,7 +9,6 @@ class Form extends React.Component {
   componentDidMount() {
     const { getFormById, id } = this.props
       getFormById(id);
-      this.isCreate = false;
   }
   componentWillUnmount() {
         this.props.setFormValue(undefined)

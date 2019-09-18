@@ -34,18 +34,21 @@ class tableRow extends React.Component {
                 {name}
             </TableCell>
             <TableCell align="right">{fields}</TableCell>
-            <TableCell align="right">{ fills.length }</TableCell>
+            {/* <TableCell align="right">{ fills.length }</TableCell> */}
             <TableCell align="center">
                 <IconButton 
                     aria-label="edit" 
                     disabled={!!fills.length}
-                    onClick={ () => this.props.changePage(id)}
+                    onClick={ () => this.props.goToEditPage(id)}
                 >
                     <EditIcon className={this.props.classes.editB} color="secondary" />
                 </IconButton>
             </TableCell>
             <TableCell align="center">
-                <IconButton aria-label="view">
+                <IconButton 
+                  aria-label="view"
+                  onClick={ () => this.props.goToFills(id)}
+                >
                     <ViewIcon className={this.props.classes.viewB} color="primary"/>
                 </IconButton>
             </TableCell>
@@ -65,7 +68,8 @@ const mapStateToProps = ({fills: { fills }}, { row: {id}}) => {
     bindActionCreators(
       {  
           getFillsByForm,
-          changePage: (id) => push(`/form/${id}`)
+          goToEditPage: (id) => push(`/form/${id}`),
+          goToFills: (id) => push(`fills/${id}`)
     },
       dispatch
     )

@@ -100,7 +100,7 @@ class Field extends React.Component {
                                         select
                                         label={key} 
                                         value={val} 
-                                        onChange={(e) => this.onChangeType(e)} 
+                                        onChange={e => this.onChangeType(e)} 
                                         
                                     >
                                         {typeOptions.map( op => <MenuItem value={op} key={op}>{op}</MenuItem>)} 

@@ -41,9 +41,9 @@ function SimpleTable({
           <TableRow>
             <TableCell>Name</TableCell>
             <TableCell align="right">Fields</TableCell>
-            <TableCell align="right">Fill peaple</TableCell>
+            {/* <TableCell align="right">Fill peaple</TableCell> */}
             <TableCell align="center">Update</TableCell>
-            <TableCell align="center">View</TableCell>
+            <TableCell align="center">View Fills</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

@@ -1,7 +1,7 @@
 import * as actions from "./actions";
 import axios from 'axios';
 
-const baseURL = 'http://forms-app.brutgroot.com/shpax'
+const baseURL = 'http://forms-app.brutgroot.com/nata_net'
 
 export const getForms = () => async (dispatch) => {
   const { data } = await axios.get(`${baseURL}/forms/list`);
@@ -17,7 +17,23 @@ export const getFormById = (id) => async (dispatch) => {
   }
 }
 
-export const updateForm = (id) => async () => {
-    const { data } = await axios.put(`${baseURL}/forms/${id}`);
-    return data
+export const updateForm = (id, payload) => async (dispatch) => {
+  try {
+    const { data } = await axios.put(`${baseURL}/forms/${id}`, payload);
+    return data;
+  } catch (err) {
+    // TODO: add handling errors and display alert
+    console.error(err.response.data)
+  }
+}
+
+export const createForm = (payload) => async (dispatch) => {
+  try {
+    console.log('Enter here')
+    const { data } = await axios.post(`${baseURL}/forms/new`, payload);
+    return data;
+  } catch(err) {
+    // TODO: add handling errors and display alert
+    console.error(err.response.data)
+  }
 }

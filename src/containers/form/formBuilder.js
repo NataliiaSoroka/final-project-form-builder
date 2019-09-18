@@ -5,12 +5,12 @@ import { connect } from 'react-redux'
 import { push } from 'connected-react-router'
 import { update } from 'ramda'
 import Field from './field'
+import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button'
 import { bindActionCreators } from 'redux'
 import Grid from '@material-ui/core/Grid'
-import { updateForm } from '../../modules/forms/thunks'
+import { updateForm, createForm } from '../../modules/forms/thunks'
 import { withStyles } from '@material-ui/styles';
-// import classes from '*.module.css'
 
 const styles ={
   indent: {
@@ -30,6 +30,7 @@ class FormBuilder extends React.Component {
       : {
           isCreate: true,
           form: {
+            name: '',
             fields: []
           }
         }
@@ -44,6 +45,7 @@ class FormBuilder extends React.Component {
         }
       })
   }
+
   addField() {
     this.setState({
       form: {
@@ -56,8 +58,23 @@ class FormBuilder extends React.Component {
     })
   }
 
+  onChangeFormName(e) {
+    const value = e.target.value
+    this.setState({
+      form: {
+        ...this.state.form,
+        name: value
+      }
+    })
+  }
+
   async saveForm() {
-    const data = await this.props.updateForm(this.state.form.id);
+    console.log('Save')
+    const payload = this.state.form;
+    const id = this.state.form.id
+    const data = this.state.isCreate
+      ? await this.props.createForm(payload)
+      : await this.props.updateForm(id, payload);
     if (data) {
       this.props.goToBack()
     }
@@ -67,6 +84,9 @@ class FormBuilder extends React.Component {
     const { classes } = this.props
     return (
       <form>
+        <TextField 
+          value={this.state.form.name} 
+          onChange={e => this.onChangeFormName(e)}></TextField>
         {
           <List>
             {this.state.form.fields.map((input, index) => {
@@ -118,6 +138,7 @@ const mapDispatchToProps = dispatch =>
   bindActionCreators(
     { 
       updateForm,
+      createForm,
       goToBack: () => push('/')
     },
     dispatch
