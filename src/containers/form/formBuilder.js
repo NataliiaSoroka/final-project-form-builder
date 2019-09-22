@@ -71,7 +71,6 @@ class FormBuilder extends React.Component {
   }
 
   async saveForm() {
-    console.log('Save')
     const payload = this.state.form;
     const id = this.state.form.id
     const data = this.state.isCreate

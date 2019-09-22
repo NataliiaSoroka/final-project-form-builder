@@ -2,7 +2,7 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { getFormById } from '../../modules/forms/thunks';
-import { setfillToForm } from '../../modules/fills/thunks';
+import Form from './form';
 
 class FillForm extends React.Component {
     componentDidMount() {
@@ -11,8 +11,7 @@ class FillForm extends React.Component {
     }
     render() {
         const { currentForm } = this.props;
-        console.log(currentForm)
-        const val = currentForm === undefined ? 'loading...' : currentForm.toString()
+        const val = currentForm === undefined ? 'loading...' : <Form form={currentForm} />
         return (
             <div>
                 { val }
@@ -34,8 +33,7 @@ const mapStateToProps = (
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {  
-      getFormById,
-      setfillToForm
+      getFormById
     },
     dispatch
   )
