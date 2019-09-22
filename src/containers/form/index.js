@@ -7,25 +7,21 @@ import FormBuilder from './formBuilder'
 
 class Form extends React.Component {
   componentDidMount() {
-    const { getFormById, id } = this.props
-      getFormById(id);
+    const { getFormById, id } = this.props;
+    getFormById(id);
   }
   componentWillUnmount() {
         this.props.setFormValue(undefined)
   }
- render() {
-   const { currentForm } = this.props
-  const val = currentForm === undefined ? 'loading...' : <FormBuilder currentForm={currentForm}/>
-   return (
-    <div>
-      <h1>Form Page</h1>
-      <p>{this.props.id}</p>
+  render() {
+    const { currentForm } = this.props
+    const val = currentForm === undefined ? 'loading...' : <FormBuilder currentForm={currentForm}/>
+    return (
       <div>
-        {val}
+        { val }
       </div>
-    </div>
-   )
- }
+    )
+  }
 }
 
 

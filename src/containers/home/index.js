@@ -4,7 +4,6 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { getForms } from '../../modules/forms/thunks'
 import TabelForms from './tabelsForms'
-import Button from '@material-ui/core/Button'
 import { withStyles } from '@material-ui/styles';
 
 const styles ={
@@ -40,12 +39,6 @@ class Home extends React.Component {
 
     return (
       <div>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => this.props.goToCreateFormPage()}>
-          Create Form
-        </Button>
         {forms.length ? (
           <TabelForms
             rowsPerPage={this.state.rowsPerPage}

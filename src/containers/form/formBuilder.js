@@ -1,14 +1,16 @@
-import React from 'react'
-import List from '@material-ui/core/List'
-import ListItem from '@material-ui/core/ListItem'
-import { connect } from 'react-redux'
-import { push } from 'connected-react-router'
-import { update } from 'ramda'
-import Field from './field'
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button'
-import { bindActionCreators } from 'redux'
-import Grid from '@material-ui/core/Grid'
+import React from 'react';
+import {
+  List,
+  ListItem,
+  TextField,
+  Button,
+  Grid
+} from '@material-ui/core';
+import { connect } from 'react-redux';
+import { push } from 'connected-react-router';
+import { update } from 'ramda';
+import Field from './field';
+import { bindActionCreators } from 'redux';
 import { updateForm, createForm } from '../../modules/forms/thunks'
 import { withStyles } from '@material-ui/styles';
 

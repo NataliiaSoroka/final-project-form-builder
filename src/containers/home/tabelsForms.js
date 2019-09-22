@@ -1,5 +1,4 @@
 import React from 'react';
-// import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -41,9 +40,9 @@ function SimpleTable({
           <TableRow>
             <TableCell>Name</TableCell>
             <TableCell align="right">Fields</TableCell>
-            {/* <TableCell align="right">Fill peaple</TableCell> */}
             <TableCell align="center">Update</TableCell>
             <TableCell align="center">View Fills</TableCell>
+            <TableCell align="center">Copy link to form</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
