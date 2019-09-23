@@ -2,10 +2,11 @@ import React from 'react';
 import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
 import {omit, assocPath, append, remove, pick, pipe, assoc} from 'ramda';
-import AddIcon from '@material-ui/icons/Add';
+import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Grid from '@material-ui/core/Grid';
+import Box from '@material-ui/core/Box';
 
 
 const typeOptions = [
@@ -77,7 +78,10 @@ class Field extends React.Component {
     }
     addItem() {
         this.setState({
-            items: append({ name: '', value: ''}, this.state.field.items)
+            field: {
+                ...this.state.field,
+                items: append({ name: '', value: ''}, this.state.field.items)
+            }
         }, () => this.props.fieldUpdate(this.state.field))
     }
     deleteItem(i) {
@@ -95,56 +99,67 @@ class Field extends React.Component {
                     if (key === 'type') {
                         return (
                             <Grid item xs={3} key={`${key}-${index}`}>
-                                    <TextField 
+                                    <TextField
                                         name={key}
                                         select
-                                        label={key} 
-                                        value={val} 
-                                        onChange={e => this.onChangeType(e)} 
-                                        
+                                        label={key}
+                                        value={val}
+                                        onChange={e => this.onChangeType(e)}
+
                                     >
-                                        {typeOptions.map( op => <MenuItem value={op} key={op}>{op}</MenuItem>)} 
+                                        {typeOptions.map( op => <MenuItem value={op} key={op}>{op}</MenuItem>)}
                                     </TextField>
-                                
+
                             </Grid>
                         )
                     } else {
                         return (
                          <Grid item xs={3} key={`${key}-${index}`}>
-                            <TextField 
+                            <TextField
                                 value={val}
-                                
-                                label={key} 
+
+                                label={key}
                                 onChange={this.onChange(key)}
                             ></TextField>
                         </Grid>
                         )
                     }
                 })}
-                {this.state.field.type === 'dropdown' ? 
-                <> {
+                {this.state.field.type === 'dropdown' ?
+                <Grid item><Box mt={2}> {
                     this.state.field.items.map(({ name, value}, idx) => {
                         return (
                             <div key={`${name}-${idx}`}>
-                                <TextField value={name} label="name" onChange={this.updateName(idx)}></TextField>
-                                <TextField value={value} label="value" onChange={this.updateValue(idx)}></TextField>
-                                <IconButton 
-                                    aria-label="delete" 
-                                    onClick={() => this.deleteItem(idx)}
-                                >
-                                    <DeleteIcon color="error" />
-                                </IconButton>
+                                <Grid container spacing={2}>
+                                    <Grid item>
+                                    <TextField value={name} label="name" onChange={this.updateName(idx)}></TextField>
+                                    </Grid>
+                                    <Grid item>
+                                    <TextField value={value} label="value" onChange={this.updateValue(idx)}></TextField>
+                                    </Grid>
+                                    <Grid item>
+                                    <IconButton
+                                        aria-label="delete"
+                                        onClick={() => this.deleteItem(idx)}
+                                    >
+                                        <DeleteIcon color="error" />
+                                    </IconButton>
+                                    </Grid>
+                                </Grid>
                             </div>
                         )
                     })
                 }
-                <IconButton 
-                    aria-label="add" 
-                    onClick={() => this.addItem()}
-                >
-                    <AddIcon color="primary" />
-                </IconButton>
-                </>: null}
+                <Box mt={2}>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => this.addItem()}
+                    >
+                    Add Dropdown item
+                    </Button>
+                </Box>
+                </Box></Grid>: null}
             </Grid>
         )
     }

@@ -4,6 +4,8 @@ import {
   ListItem,
   TextField,
   Button,
+  Card,
+  Box,
   Grid
 } from '@material-ui/core';
 import { connect } from 'react-redux';
@@ -11,12 +13,15 @@ import { push } from 'connected-react-router';
 import { update } from 'ramda';
 import Field from './field';
 import { bindActionCreators } from 'redux';
-import { updateForm, createForm } from '../../modules/forms/thunks'
+import { updateForm, createForm } from '../../modules/forms/thunks';
 import { withStyles } from '@material-ui/styles';
 
 const styles ={
   indent: {
     margin: '10px 0'
+  },
+  elementCard: {
+    width: '100%'
   }
 }
 
@@ -71,6 +76,7 @@ class FormBuilder extends React.Component {
   }
 
   async saveForm() {
+    console.log('Save')
     const payload = this.state.form;
     const id = this.state.form.id
     const data = this.state.isCreate
@@ -85,18 +91,22 @@ class FormBuilder extends React.Component {
     const { classes } = this.props
     return (
       <form>
-        <TextField 
-          value={this.state.form.name} 
+        <TextField
+          value={this.state.form.name}
           onChange={e => this.onChangeFormName(e)}></TextField>
         {
           <List>
             {this.state.form.fields.map((input, index) => {
               return (
                 <ListItem className={classes.indent} key={index}>
-                  <Field
-                    fieldData={input}
-                    fieldUpdate={this.fieldUpdate(index)}
-                  />
+                  <Card className={classes.elementCard}>
+                    <Box p={2} width={1}>
+                      <Field
+                        fieldData={input}
+                        fieldUpdate={this.fieldUpdate(index)}
+                      />
+                    </Box>
+                  </Card>
                 </ListItem>
               )
             })}
@@ -110,7 +120,7 @@ class FormBuilder extends React.Component {
           onClick={() => this.addField()}>
           Add field
         </Button>
-        
+
         <Grid container spacing={5} className={classes.indent}>
           <Grid item xs={3}>
             <Button
@@ -137,7 +147,7 @@ class FormBuilder extends React.Component {
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
-    { 
+    {
       updateForm,
       createForm,
       goToBack: () => push('/')
