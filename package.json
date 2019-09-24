@@ -30,7 +30,8 @@
     "redux-actions": "^2.6.5",
     "redux-thunk": "2.3.0",
     "sanitize.css": "7.0.3",
-    "serve": "10.1.2"
+    "serve": "10.1.2",
+    "yup": "^0.27.0"
   },
   "browserslist": [
     ">0.2%",

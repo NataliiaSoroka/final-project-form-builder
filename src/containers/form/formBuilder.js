@@ -17,6 +17,8 @@ import { updateForm, createForm } from '../../modules/forms/thunks'
 import { withStyles } from '@material-ui/styles'
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
 import { object, string, array } from 'yup'
+import { setMessage, setStatePopup, setStatus } from '../../modules/shared/actions';
+
 
 const styles = {
   indent: {
@@ -139,20 +141,30 @@ class FormBuilder extends React.Component {
     })
   }
 
-  async saveForm() {
-    console.log('Save')
+  saveForm() {
     const payload = this.state.form
     const id = this.state.form.id
+    const { 
+      setMessage, 
+      setStatePopup, 
+      setStatus,
+      createForm,
+      updateForm
+    } = this.props
     formSchema
-      .validate(this.state.form)
-      .then(console.log)
-      .catch(console.warn)
-    // const data = this.state.isCreate
-    //   ? await this.props.createForm(payload)
-    //   : await this.props.updateForm(id, payload);
-    // if (data) {
-    //   this.props.goToBack()
-    // }
+      .validate(payload)
+      .then(payload => {
+          this.state.isCreate
+            ? createForm(payload)
+            : updateForm(id, payload)
+        }
+      )
+      .catch(err => {
+        setMessage(err.message)
+        setStatePopup(true) 
+        setStatus(true)
+      })
+    
   }
 
   render() {
@@ -253,6 +265,9 @@ const mapDispatchToProps = dispatch =>
     {
       updateForm,
       createForm,
+      setMessage, 
+      setStatePopup, 
+      setStatus,
       goToBack: () => push('/')
     },
     dispatch

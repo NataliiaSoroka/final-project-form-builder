@@ -1,5 +1,6 @@
 import * as actions from "./actions";
 import { setStatePopup, setMessage, setStatus } from '../shared/actions';
+import { push } from 'connected-react-router'
 import axios from 'axios';
 
 // const baseURL = 'http://forms-app.brutgroot.com/nata_net'
@@ -20,11 +21,11 @@ export const getFormById = (id) => async (dispatch) => {
 
 export const updateForm = (id, payload) => async (dispatch) => {
   try {
-    const { data } = await axios.put(`${baseURL}/forms/${id}`, payload);
+    await axios.put(`${baseURL}/forms/${id}`, payload);
     dispatch(setStatePopup(true))
     dispatch(setMessage('The form was saved successfully'))
     dispatch(setStatus(false))
-    return data;
+    dispatch(push('/'))
   } catch (err) {
     dispatch(setStatePopup(true))
     dispatch(setMessage('The form was not saved'))
@@ -34,11 +35,11 @@ export const updateForm = (id, payload) => async (dispatch) => {
 
 export const createForm = (payload) => async (dispatch) => {
   try {
-    const { data } = await axios.post(`${baseURL}/forms/new`, payload);
+    await axios.post(`${baseURL}/forms/new`, payload);
     dispatch(setStatePopup(true))
     dispatch(setMessage('The form was created successfully'))
     dispatch(setStatus(false))
-    return data;
+    dispatch(push('/'))
   } catch(err) {
     dispatch(setStatePopup(true))
     dispatch(setMessage('The form was not created'))
