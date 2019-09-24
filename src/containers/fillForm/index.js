@@ -3,6 +3,14 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { getFormById } from '../../modules/forms/thunks';
 import Form from './form';
+import { withStyles } from '@material-ui/styles';
+import { Grid } from '@material-ui/core/';
+
+const styles = {
+  root: {
+    width: '100%'
+  }
+}
 
 class FillForm extends React.Component {
     componentDidMount() {
@@ -10,12 +18,18 @@ class FillForm extends React.Component {
         getFormById(id);
     }
     render() {
-        const { currentForm } = this.props;
+        const { currentForm, classes } = this.props;
         const val = currentForm === undefined ? 'loading...' : <Form form={currentForm} />
         return (
-            <div>
+            <Grid
+              container
+              direction="row"
+              justify="center"
+              alignItems="flex-start"
+              className={classes.root}
+            >
                 { val }
-            </div>
+            </Grid>
         )
     }
 }
@@ -41,4 +55,4 @@ const mapDispatchToProps = dispatch =>
   export default connect(
     mapStateToProps,
     mapDispatchToProps
-  )(FillForm)
+  )(withStyles(styles)(FillForm))

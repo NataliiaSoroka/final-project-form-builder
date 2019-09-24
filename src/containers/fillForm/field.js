@@ -71,7 +71,7 @@ function Field(props) {
                 justify="center"
                 alignItems="center"
             >
-                <Grid item xs={10}>
+                <Grid item xs={12}>
                     { switchField(input, handlerChange) }
                 </Grid>
             </Grid>

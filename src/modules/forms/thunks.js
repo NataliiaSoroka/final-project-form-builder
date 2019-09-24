@@ -1,4 +1,5 @@
 import * as actions from "./actions";
+import { setStatePopup, setMessage, setStatus } from '../shared/actions';
 import axios from 'axios';
 
 // const baseURL = 'http://forms-app.brutgroot.com/nata_net'
@@ -20,19 +21,27 @@ export const getFormById = (id) => async (dispatch) => {
 export const updateForm = (id, payload) => async (dispatch) => {
   try {
     const { data } = await axios.put(`${baseURL}/forms/${id}`, payload);
+    dispatch(setStatePopup(true))
+    dispatch(setMessage('The form was saved successfully'))
+    dispatch(setStatus(false))
     return data;
   } catch (err) {
-    // TODO: add handling errors and display alert
-    console.error(err.response.data)
+    dispatch(setStatePopup(true))
+    dispatch(setMessage('The form was not saved'))
+    dispatch(setStatus(true))
   }
 }
 
 export const createForm = (payload) => async (dispatch) => {
   try {
     const { data } = await axios.post(`${baseURL}/forms/new`, payload);
+    dispatch(setStatePopup(true))
+    dispatch(setMessage('The form was created successfully'))
+    dispatch(setStatus(false))
     return data;
   } catch(err) {
-    // TODO: add handling errors and display alert
-    console.error(err.response.data)
+    dispatch(setStatePopup(true))
+    dispatch(setMessage('The form was not created'))
+    dispatch(setStatus(true))
   }
 }

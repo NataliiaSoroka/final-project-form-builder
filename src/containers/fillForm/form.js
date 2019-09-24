@@ -8,7 +8,7 @@ import { withStyles } from '@material-ui/styles';
 
 const styles ={
     card: {
-        maxWidth: 500
+        minWidth: 500
     }
 }
 

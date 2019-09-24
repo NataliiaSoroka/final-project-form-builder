@@ -1,4 +1,5 @@
 import * as actions from "./actions";
+import { setStatePopup, setMessage, setStatus } from '../shared/actions';
 import axios from 'axios';
 
 const baseURL = 'http://forms-app.brutgroot.com/shpax'
@@ -10,7 +11,15 @@ export const getFillsByForm = (id, page, itemsOnPAge) => async (dispatch) => {
 }
 
 export const setfillToForm = (id, payload) => async (dispatch) => {
-    const { data } = await axios.post(`${baseURL}/fills/${id}`, payload);
-    data && alert('save fill');
-    return data;
+    try {
+        const { data } = await axios.post(`${baseURL}/fills/${id}`, payload);
+        dispatch(setStatePopup(true))
+        dispatch(setMessage('The form was saved successfully'))
+        dispatch(setStatus(false))
+        return data;
+    } catch (err) {
+        dispatch(setStatePopup(true))
+        dispatch(setMessage('The form was not saved'))
+        dispatch(setStatus(true))
+    }
 }

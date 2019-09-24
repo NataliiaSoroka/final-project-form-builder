@@ -5,6 +5,7 @@ import Form from '../form';
 import Fills from '../fills';
 import FillForm from '../fillForm';
 import Header from './header';
+import Notify from './notify';
 
 
 function isFillFormPage(url) {
@@ -15,6 +16,7 @@ const App = () => (
   <div>
       { isFillFormPage(window.location.href) ? null : <Header /> }
     <main>
+      <Notify />
       <Route exact path="/" component={Home} />
       <Route exact path="/fills/:id" component={Fills} />
       <Route exact path="/form/:id" component={Form} />
