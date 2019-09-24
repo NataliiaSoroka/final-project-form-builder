@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 import {
   List,
   ListItem,
@@ -7,17 +7,18 @@ import {
   Card,
   Box,
   Grid
-} from '@material-ui/core';
-import { connect } from 'react-redux';
-import { push } from 'connected-react-router';
-import { update } from 'ramda';
-import Field from './field';
-import { bindActionCreators } from 'redux';
-import { updateForm, createForm } from '../../modules/forms/thunks';
-import { withStyles } from '@material-ui/styles';
-import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
+} from '@material-ui/core'
+import { connect } from 'react-redux'
+import { push } from 'connected-react-router'
+import { update, remove } from 'ramda'
+import Field from './field'
+import { bindActionCreators } from 'redux'
+import { updateForm, createForm } from '../../modules/forms/thunks'
+import { withStyles } from '@material-ui/styles'
+import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
+import { object, string, array } from 'yup'
 
-const styles ={
+const styles = {
   indent: {
     margin: '10px 0'
   },
@@ -25,6 +26,26 @@ const styles ={
     width: '100%'
   }
 }
+
+const formSchema = object().shape({
+  name: string()
+    .required()
+    .min(6),
+  fields: array()
+    .required()
+    .min(1)
+    .of(
+      object().shape({
+        type: string().required(),
+        name: string()
+          .required()
+          .min(3),
+        label: string()
+          .required()
+          .min(3)
+      })
+    )
+})
 
 class FormBuilder extends React.Component {
   constructor(props) {
@@ -39,7 +60,7 @@ class FormBuilder extends React.Component {
           isCreate: true,
           form: {
             name: '',
-            fields: []
+            fields: [{ type: 'text', name: '', label: '', placeholder: '' }]
           }
         }
     this.reorder = this.reorder.bind(this)
@@ -51,30 +72,30 @@ class FormBuilder extends React.Component {
   }
 
   reorder(list, startIndex, endIndex) {
-    const result = Array.from(list);
-    const [removed] = result.splice(startIndex, 1);
-    result.splice(endIndex, 0, removed);
-    return result;
+    const result = Array.from(list)
+    const [removed] = result.splice(startIndex, 1)
+    result.splice(endIndex, 0, removed)
+    return result
   }
 
   onDragEnd(result) {
     // dropped outside the list
-    if(!result.destination) {
-       return;
+    if (!result.destination) {
+      return
     }
 
     const items = this.reorder(
       this.state.form.fields,
       result.source.index,
       result.destination.index
-    );
+    )
 
     this.setState({
       form: {
         ...this.state.form,
         fields: items
       }
-    });
+    })
   }
 
   fieldUpdate(index) {
@@ -85,6 +106,15 @@ class FormBuilder extends React.Component {
           fields: update(index, field, this.state.form.fields)
         }
       })
+  }
+
+  deleteField(index) {
+    this.setState({
+      form: {
+        ...this.state.form,
+        fields: remove(index, 1, this.state.form.fields)
+      }
+    })
   }
 
   addField() {
@@ -111,14 +141,18 @@ class FormBuilder extends React.Component {
 
   async saveForm() {
     console.log('Save')
-    const payload = this.state.form;
+    const payload = this.state.form
     const id = this.state.form.id
-    const data = this.state.isCreate
-      ? await this.props.createForm(payload)
-      : await this.props.updateForm(id, payload);
-    if (data) {
-      this.props.goToBack()
-    }
+    formSchema
+      .validate(this.state.form)
+      .then(console.log)
+      .catch(console.warn)
+    // const data = this.state.isCreate
+    //   ? await this.props.createForm(payload)
+    //   : await this.props.updateForm(id, payload);
+    // if (data) {
+    //   this.props.goToBack()
+    // }
   }
 
   render() {
@@ -128,50 +162,54 @@ class FormBuilder extends React.Component {
         <Box p={2} mt={2}>
           <TextField
             value={this.state.form.name}
-            onChange={e => this.onChangeFormName(e)}
-          ></TextField>
+            onChange={e => this.onChangeFormName(e)}></TextField>
         </Box>
-            {<DragDropContext onDragEnd={this.onDragEnd}>
-              <Droppable droppableId="droppable">
-                {(provided) => {
-                  return (<List
-                    {...provided.droppableProps}
-                    ref={provided.innerRef}
-                  >
-                  {this.state.form.fields.map((input, index) => {
-                    return (
-                      <Draggable
-                        key={this.generateIdFromField(input, index)}
-                        draggableId={this.generateIdFromField(input, index)}
-                        index={index}
-                      >
-                        {(provided) => {
-                          return (<ListItem
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                            className={classes.indent}
-                            key={index}
-                          >
-                            <Card className={classes.elementCard}>
-                              <Box p={2} width={1}>
-                                <Field
-                                  fieldData={input}
-                                  fieldUpdate={this.fieldUpdate(index)}
-                                />
-                              </Box>
-                            </Card>
-                          </ListItem>)
-                        }}
-                      </Draggable>
-
-                    )
-                  })}
-                  {provided.placeholder}
-                  </List>)
-                }}
-              </Droppable>
-            </DragDropContext>
+        {
+          <DragDropContext onDragEnd={this.onDragEnd}>
+            <Droppable droppableId="droppable">
+              {provided => {
+                return (
+                  <List {...provided.droppableProps} ref={provided.innerRef}>
+                    {this.state.form.fields.map((input, index) => {
+                      return (
+                        <Draggable
+                          key={index}
+                          draggableId={this.generateIdFromField(input, index)}
+                          index={index}>
+                          {provided => {
+                            return (
+                              <ListItem
+                                ref={provided.innerRef}
+                                {...provided.draggableProps}
+                                {...provided.dragHandleProps}
+                                className={classes.indent}
+                                key={index}>
+                                <Card className={classes.elementCard}>
+                                  <Box p={2} width={1}>
+                                    <Field
+                                      fieldData={input}
+                                      fieldUpdate={this.fieldUpdate(index)}
+                                      isLastItem={
+                                        this.state.form.fields.length === 1
+                                      }
+                                      deleteField={() =>
+                                        this.deleteField(index)
+                                      }
+                                    />
+                                  </Box>
+                                </Card>
+                              </ListItem>
+                            )
+                          }}
+                        </Draggable>
+                      )
+                    })}
+                    {provided.placeholder}
+                  </List>
+                )
+              }}
+            </Droppable>
+          </DragDropContext>
         }
         <Box p={2}>
           <Grid container spacing={5}>
@@ -186,27 +224,22 @@ class FormBuilder extends React.Component {
             </Grid>
           </Grid>
 
-          <Grid
-            container
-            spacing={5}
-            justify="space-between"
-          >
+          <Grid container spacing={5} justify="space-between">
             <Grid item xs={3}>
               <Button
                 variant="contained"
                 color="secondary"
-                onClick={() => this.saveForm()}
-              >
+                onClick={() => this.saveForm()}>
                 Save form
               </Button>
             </Grid>
             <Grid item>
-            <Button
-              variant="outlined"
-              color="primary"
-              onClick={() => this.props.goToBack()}>
-              Cancel
-            </Button>
+              <Button
+                variant="outlined"
+                color="primary"
+                onClick={() => this.props.goToBack()}>
+                Cancel
+              </Button>
             </Grid>
           </Grid>
         </Box>
@@ -223,7 +256,7 @@ const mapDispatchToProps = dispatch =>
       goToBack: () => push('/')
     },
     dispatch
-)
+  )
 const Component = withStyles(styles)(FormBuilder)
 
 export default connect(
