@@ -1,9 +1,16 @@
 import React from 'react';
 import Field from './field';
 import { setfillToForm } from '../../modules/fills/thunks';
-import Button from '@material-ui/core/Button';
+import { Button, Card, CardHeader, CardContent, CardActions } from '@material-ui/core/';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { withStyles } from '@material-ui/styles';
+
+const styles ={
+    card: {
+        maxWidth: 500
+    }
+}
 
 class Form extends React.Component {
     constructor(props) {
@@ -32,14 +39,21 @@ class Form extends React.Component {
 
     render() {
         const { fields, name } = this.props.form
+        const { classes } = this.props
         return (
-            <form>
-                <h3>{name}</h3>
-                { 
-                    fields.map(row => <Field input={row} key={row.name} handlerChange={this.handlerChange(row.name)}/>)
-                }
-                <Button color="primary" onClick={() => this.saveForm()}>Save form</Button>
-            </form>
+            <Card className={classes.card}>
+                <form>
+                    <CardHeader title={name} />
+                    <CardContent>
+                        { 
+                            fields.map(row => <Field input={row} key={row.name} handlerChange={this.handlerChange(row.name)}/>)
+                        }
+                    </CardContent>
+                    <CardActions>
+                        <Button color="primary" onClick={() => this.saveForm()}>Save form</Button>
+                    </CardActions>
+                </form>
+            </Card>
         )
     }
 }
@@ -55,6 +69,4 @@ const mapDispatchToProps = dispatch =>
   export default connect(
     null,
     mapDispatchToProps
-  )(Form)
-
-// export default Form;
+  )(withStyles(styles)(Form))

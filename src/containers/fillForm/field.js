@@ -17,6 +17,7 @@ function switchField(input, handlerChange) {
                 name={input.name}
                 onChange={(e) => handlerChange(e.target.value)}
                 fullWidth
+                required
             />
         case 'number':
             return <TextField
@@ -25,6 +26,7 @@ function switchField(input, handlerChange) {
                 name={input.name}
                 onChange={(e) => handlerChange(e.target.value)}
                 fullWidth
+                required
             />
         case "dropdown":
             return <TextField
@@ -33,6 +35,7 @@ function switchField(input, handlerChange) {
                 value={(input.items[input.default]|| {}).value}
                 onChange={(e) => handlerChange(e.target.value)}
                 fullWidth
+                required
                 select
                 >
                     {input.items.map(op => <MenuItem value={op.value} key={op.value}>{op.name}</MenuItem>)}
@@ -62,8 +65,13 @@ function Field(props) {
     const { input, handlerChange} = props;
     return (
         <div>
-            <Grid container spacing={3}>
-                <Grid item xs={6}>
+            <Grid 
+                container 
+                spacing={3}
+                justify="center"
+                alignItems="center"
+            >
+                <Grid item xs={10}>
                     { switchField(input, handlerChange) }
                 </Grid>
             </Grid>

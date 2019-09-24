@@ -88,7 +88,7 @@ class Field extends React.Component {
         this.setState({
             field: {
                 ...this.state.field,
-                items: remove(i, 1, this.state.items)
+                items: remove(i, 1, this.state.field.items)
             }
         }, () => this.props.fieldUpdate(this.state.field))
     }

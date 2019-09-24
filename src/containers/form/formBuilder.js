@@ -15,6 +15,7 @@ import Field from './field';
 import { bindActionCreators } from 'redux';
 import { updateForm, createForm } from '../../modules/forms/thunks';
 import { withStyles } from '@material-ui/styles';
+import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 
 const styles ={
   indent: {
@@ -41,6 +42,39 @@ class FormBuilder extends React.Component {
             fields: []
           }
         }
+    this.reorder = this.reorder.bind(this)
+    this.onDragEnd = this.onDragEnd.bind(this)
+  }
+
+  generateIdFromField(field, index) {
+    return `${field.type}-${field.name}-${field.label}-${index}`
+  }
+
+  reorder(list, startIndex, endIndex) {
+    const result = Array.from(list);
+    const [removed] = result.splice(startIndex, 1);
+    result.splice(endIndex, 0, removed);
+    return result;
+  }
+
+  onDragEnd(result) {
+    // dropped outside the list
+    if(!result.destination) {
+       return;
+    }
+
+    const items = this.reorder(
+      this.state.form.fields,
+      result.source.index,
+      result.destination.index
+    );
+
+    this.setState({
+      form: {
+        ...this.state.form,
+        fields: items
+      }
+    });
   }
 
   fieldUpdate(index) {
@@ -91,55 +125,91 @@ class FormBuilder extends React.Component {
     const { classes } = this.props
     return (
       <form>
-        <TextField
-          value={this.state.form.name}
-          onChange={e => this.onChangeFormName(e)}></TextField>
-        {
-          <List>
-            {this.state.form.fields.map((input, index) => {
-              return (
-                <ListItem className={classes.indent} key={index}>
-                  <Card className={classes.elementCard}>
-                    <Box p={2} width={1}>
-                      <Field
-                        fieldData={input}
-                        fieldUpdate={this.fieldUpdate(index)}
-                      />
-                    </Box>
-                  </Card>
-                </ListItem>
-              )
-            })}
-          </List>
-        }
-        <Button
-        className={classes.indent}
-          variant="contained"
-          color="primary"
-          disabled={this.state.form.fields.length >= 15}
-          onClick={() => this.addField()}>
-          Add field
-        </Button>
+        <Box p={2} mt={2}>
+          <TextField
+            value={this.state.form.name}
+            onChange={e => this.onChangeFormName(e)}
+          ></TextField>
+        </Box>
+            {<DragDropContext onDragEnd={this.onDragEnd}>
+              <Droppable droppableId="droppable">
+                {(provided) => {
+                  return (<List
+                    {...provided.droppableProps}
+                    ref={provided.innerRef}
+                  >
+                  {this.state.form.fields.map((input, index) => {
+                    return (
+                      <Draggable
+                        key={this.generateIdFromField(input, index)}
+                        draggableId={this.generateIdFromField(input, index)}
+                        index={index}
+                      >
+                        {(provided) => {
+                          return (<ListItem
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            className={classes.indent}
+                            key={index}
+                          >
+                            <Card className={classes.elementCard}>
+                              <Box p={2} width={1}>
+                                <Field
+                                  fieldData={input}
+                                  fieldUpdate={this.fieldUpdate(index)}
+                                />
+                              </Box>
+                            </Card>
+                          </ListItem>)
+                        }}
+                      </Draggable>
 
-        <Grid container spacing={5} className={classes.indent}>
-          <Grid item xs={3}>
+                    )
+                  })}
+                  {provided.placeholder}
+                  </List>)
+                }}
+              </Droppable>
+            </DragDropContext>
+        }
+        <Box p={2}>
+          <Grid container spacing={5}>
+            <Grid item xs={3}>
+              <Button
+                variant="contained"
+                color="primary"
+                disabled={this.state.form.fields.length >= 15}
+                onClick={() => this.addField()}>
+                Add field
+              </Button>
+            </Grid>
+          </Grid>
+
+          <Grid
+            container
+            spacing={5}
+            justify="space-between"
+          >
+            <Grid item xs={3}>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={() => this.saveForm()}
+              >
+                Save form
+              </Button>
+            </Grid>
+            <Grid item>
             <Button
-              variant="contained"
-              color="secondary"
-              onClick={() => this.saveForm()}
-            >
-              Save form
+              variant="outlined"
+              color="primary"
+              onClick={() => this.props.goToBack()}>
+              Cancel
             </Button>
+            </Grid>
           </Grid>
-          <Grid item xs={2}>
-          <Button
-            variant="outlined"
-            color="primary"
-            onClick={() => this.props.goToBack()}>
-            Cancel
-          </Button>
-          </Grid>
-        </Grid>
+        </Box>
       </form>
     )
   }
