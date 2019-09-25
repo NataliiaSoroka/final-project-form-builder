@@ -79,7 +79,7 @@ function Field(props) {
     <div>
       <Grid container spacing={3} justify="center" alignItems="center">
         <Grid item xs={12}>
-          {SwitchField(input, handlerChange)}
+          {switchField(input, handlerChange)}
         </Grid>
       </Grid>
     </div>
