@@ -1,8 +1,8 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { getFormById } from '../../modules/forms/thunks';
-import Form from './form';
+import { getFormById } from '../modules/forms/thunks';
+import Form from '../components/fillForm/form';
 import { withStyles } from '@material-ui/styles';
 import { Grid } from '@material-ui/core/';
 
@@ -19,7 +19,7 @@ class FillForm extends React.Component {
     }
     render() {
         const { currentForm, classes } = this.props;
-        const val = currentForm === undefined ? 'loading...' : <Form form={currentForm} />
+        const val = currentForm === undefined || currentForm === null ? 'loading...' : <Form form={currentForm} />
         return (
             <Grid
               container

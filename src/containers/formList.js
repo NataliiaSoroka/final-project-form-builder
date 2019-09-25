@@ -2,8 +2,8 @@ import React from 'react'
 import { push } from 'connected-react-router'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { getForms } from '../../modules/forms/thunks'
-import TabelForms from './tabelsForms'
+import { getForms } from '../modules/forms/thunks'
+import TabelForms from '../components/formList/tabelsForms'
 import { withStyles } from '@material-ui/styles';
 
 const styles ={

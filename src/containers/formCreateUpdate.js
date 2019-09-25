@@ -1,14 +1,18 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { getFormById } from '../../modules/forms/thunks';
-import { getFormById as setFormValue } from '../../modules/forms/actions';
-import FormBuilder from './formBuilder'
+import { getFormById } from '../modules/forms/thunks';
+import { getFormById as setFormValue } from '../modules/forms/actions';
+import FormBuilder from '../components/formCreateUpdate/formBuilder'
 
 class Form extends React.Component {
   componentDidMount() {
-    const { getFormById, id } = this.props;
-    getFormById(id);
+    const { getFormById, id, setFormValue } = this.props;
+    if (id === 'new') {
+      setFormValue(null);
+    } else {
+      getFormById(id);
+    }
   }
   componentWillUnmount() {
         this.props.setFormValue(undefined)

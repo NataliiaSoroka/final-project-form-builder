@@ -1,8 +1,8 @@
 import * as actions from "./actions";
-import { setStatePopup, setMessage, setStatus } from '../shared/actions';
+import { setStatePopup, setMessage, setStatus } from '../popup/actions';
 import axios from 'axios';
 
-const baseURL = 'http://forms-app.brutgroot.com/shpax'
+const baseURL = 'http://forms-app.brutgroot.com/nata_net'
 
 export const getFillsByForm = (id, page, itemsOnPAge) => async (dispatch) => {
     const offset = page * itemsOnPAge;

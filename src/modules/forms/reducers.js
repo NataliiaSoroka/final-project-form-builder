@@ -4,7 +4,7 @@ import {clone} from 'ramda';
 
 const initialState = {
     forms: [],
-    currentForm: undefined // null - no form, {} - form
+    currentForm: undefined
 };
 
 const forms = handleActions({

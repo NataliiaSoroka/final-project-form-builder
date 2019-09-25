@@ -1,7 +1,7 @@
 import React from 'react'
 import Field from './field'
 import { setfillToForm } from '../../modules/fills/thunks'
-import { setMessage, setStatePopup, setStatus } from '../../modules/shared/actions';
+import { setMessage, setStatePopup, setStatus } from '../../modules/popup/actions';
 import {
   Button,
   Card,

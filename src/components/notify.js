@@ -2,7 +2,7 @@ import React from 'react';
 import Popover from '@material-ui/core/Popover';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { setStatePopup, setMessage } from '../../modules/shared/actions';
+import { setStatePopup, setMessage } from '../modules/popup/actions';
 import { withStyles } from '@material-ui/styles';
 import { green, grey, red } from '@material-ui/core/colors';
 
@@ -44,7 +44,7 @@ function Popup(props) {
     )
 }
 
-const mapStateToProps = ({ shared: { message, isOpenPopup, isError }}) => {
+const mapStateToProps = ({ popup: { message, isOpenPopup, isError }}) => {
     return {
         message,
         isOpenPopup,

@@ -1,8 +1,8 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { getFillsByForm } from '../../modules/fills/thunks';
-import TableFills from './tabelFills';
+import { getFillsByForm } from '../modules/fills/thunks';
+import TableFills from '../components/fills/tabelFills';
 
 
 class Fills extends React.Component {

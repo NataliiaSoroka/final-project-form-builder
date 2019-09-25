@@ -17,7 +17,7 @@ import { updateForm, createForm } from '../../modules/forms/thunks'
 import { withStyles } from '@material-ui/styles'
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
 import { object, string, array } from 'yup'
-import { setMessage, setStatePopup, setStatus } from '../../modules/shared/actions';
+import { setMessage, setStatePopup, setStatus } from '../../modules/popup/actions';
 
 
 const styles = {
@@ -48,12 +48,16 @@ const formSchema = object().shape({
       })
     )
 })
+function isNewFormCreate() {
+  const url = window.location.href
+  return url.includes('/form/new');
+}
 
 class FormBuilder extends React.Component {
   constructor(props) {
     super(props)
     const { currentForm } = this.props
-    this.state = currentForm
+    this.state = (currentForm && !isNewFormCreate())
       ? {
           isCreate: false,
           form: currentForm
@@ -174,6 +178,7 @@ class FormBuilder extends React.Component {
         <Box p={2} mt={2}>
           <TextField
             value={this.state.form.name}
+            label="Form name"
             onChange={e => this.onChangeFormName(e)}></TextField>
         </Box>
         {
