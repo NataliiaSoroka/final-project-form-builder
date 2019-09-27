@@ -164,9 +164,9 @@ class Field extends React.Component {
               {' '}
               {this.state.field.items.map(({ name, value }, idx) => {
                 return (
-                  <div key={`${name}-${idx}`}>
+                  <div key={`${idx}`}>
                     <Grid container spacing={2}>
-                      <Grid item>
+                      <Grid item >
                         <TextField
                           value={name}
                           label="name"

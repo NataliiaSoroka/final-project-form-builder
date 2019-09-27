@@ -44,7 +44,15 @@ const formSchema = object().shape({
           .min(3),
         label: string()
           .required()
-          .min(3)
+          .min(3),
+        items: array()
+          .min(1)
+          .of(
+            object().shape({
+              name: string().required(),
+              value: string().required()
+            })
+          )
       })
     )
 })
@@ -74,7 +82,7 @@ class FormBuilder extends React.Component {
   }
 
   generateIdFromField(field, index) {
-    return `${field.type}-${field.name}-${field.label}-${index}`
+    return `${field.type}-${index}`
   }
 
   reorder(list, startIndex, endIndex) {
@@ -190,7 +198,7 @@ class FormBuilder extends React.Component {
                     {this.state.form.fields.map((input, index) => {
                       return (
                         <Draggable
-                          key={index}
+                          key={this.generateIdFromField(input, index)}
                           draggableId={this.generateIdFromField(input, index)}
                           index={index}>
                           {provided => {
