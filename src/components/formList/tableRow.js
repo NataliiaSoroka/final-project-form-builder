@@ -11,7 +11,7 @@ import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
 import { withStyles } from '@material-ui/styles';
 import { green, yellow, blue } from '@material-ui/core/colors';
-
+import { setMessage, setStatePopup } from '../../modules/popup/actions';
 
 const styles = {
     editB: {
@@ -38,6 +38,8 @@ class tableRow extends React.Component {
       textarea.select();
       document.execCommand("copy");
       textarea.remove();
+      this.props.setMessage('Link copied to clipboard');
+      this.props.setStatePopup(true);
     }
 
     render () {
@@ -91,6 +93,8 @@ const mapStateToProps = ({fills: { fills }}, { row: {id}}) => {
     bindActionCreators(
       {  
           getFillsByForm,
+          setMessage, 
+          setStatePopup,
           goToEditPage: (id) => push(`/form/${id}`),
           goToFills: (id) => push(`fills/${id}`)
     },
